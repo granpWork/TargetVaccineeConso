@@ -222,7 +222,7 @@ def VaccinatedYesNo(row, Vaccinated, param, columnName):
                     'Pfizer-BioNTech', 'Sinopharm', 'Sinovac', 'Sputnik V',
                     'N/A']
 
-    if Vaccinated.lower() == 'yes':
+    if str(Vaccinated).lower() == 'yes':
         if columnName == 'Vaccine Brand':
             isOtherVaccineBrand = param.lower() in list(map(lambda x: x.lower(), vaccineBrand))
 
@@ -247,7 +247,7 @@ def VaccinatedYesNo(row, Vaccinated, param, columnName):
             #     arr_err.append(str(row + 2) + '-2nd dose (LGU or LTGC) column should not be N/A if '
             #                                   'Vaccinated column is Yes ')
 
-    elif Vaccinated.lower() == 'no':
+    elif str(Vaccinated).lower() == 'no':
         if columnName == 'Vaccine Brand':
             if param == '':
                 arr_err.append(str(row + 2) + '-Vaccine Brand column should be N/A if Vaccinated column is No')
@@ -265,6 +265,9 @@ def VaccinatedYesNo(row, Vaccinated, param, columnName):
                 arr_err.append(str(row + 2) + '-2nd dose (LGU or LTGC) column should be N/A if Vaccinated column is No')
             if param != 'N/A':
                 arr_err.append(str(row + 2) + '-2nd dose (LGU or LTGC) column should be N/A if Vaccinated column is No')
+
+    else:
+        arr_err.append(str(row + 2) + '-2nd dose (LGU or LTGC) column invalid entry.')
 
     return arr_err
 
