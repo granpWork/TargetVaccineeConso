@@ -237,9 +237,9 @@ def VaccinatedYesNo(row, Vaccinated, param, columnName):
         if columnName == '1st dose \n (LGU or LTGC)':
             if param == '':
                 arr_err.append(str(row + 2) + '-1st dose (LGU or LTGC) column should not be Blank, put N/A instead.')
-            if param == 'N/A':
-                arr_err.append(str(row + 2) + '-1st dose (LGU or LTGC) column should not be N/A if '
-                                              'Vaccinated column is Yes ')
+            # if param == 'N/A':
+            #     arr_err.append(str(row + 2) + '-1st dose (LGU or LTGC) column should not be N/A if '
+            #                                   'Vaccinated column is Yes ')
         if columnName == '2nd dose \n (LGU or LTGC)':
             if param == '':
                 arr_err.append(str(row + 2) + '-2nd dose (LGU or LTGC) column should not be Blank, put N/A instead.')
