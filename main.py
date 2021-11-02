@@ -224,12 +224,12 @@ def VaccinatedYesNo(row, Vaccinated, param, columnName):
 
     if str(Vaccinated).lower() == 'yes':
         if columnName == 'Vaccine Brand':
-            isOtherVaccineBrand = param.lower() in list(map(lambda x: x.lower(), vaccineBrand))
+            isOtherVaccineBrand = str(param).lower() in list(map(lambda x: x.lower(), vaccineBrand))
 
             if param == '':
                 arr_err.append(str(row + 2) + '-Vaccine Brand column should not be Blank, put N/A instead.')
             elif not isOtherVaccineBrand:
-                arr_err.append(str(row + 2) + '-Vaccine Brand ' + param + ' is not in the list of brands.')
+                arr_err.append(str(row + 2) + '-Vaccine Brand ' + str(param) + ' is not in the list of brands.')
 
             if param == 'N/A':
                 arr_err.append(str(row + 2) + '-Vaccine Brand column should not be N/A if Vaccinated column '
@@ -284,8 +284,8 @@ def ValidateVaccinatedField(df, companyName):
                                                              columnName), axis=1))
 
     errMessage = list(itertools.chain.from_iterable(errMessage))
-    # for i in errMessage:
-    #     print(i)
+    for i in errMessage:
+        print(i)
     return processError(errMessage, companyName, 'VaccinatedYesNo')
 
 
