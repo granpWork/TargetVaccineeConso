@@ -112,14 +112,25 @@ def dateValidator(row, fdose, sdose, param, columnName, vaccinated):
                     # print(str(row + 2) + '-' + str(param) + ' incorrect data format, should be '
                     #                                         'MM/DD/YYYY.')
 
-        if fdose == 'N/A' and (param != '' and param != 'N/A' and pd.notna(param)):
-            arr_err.append(str(row + 2) + '-1st Dose Vaccination Date (MM/DD/YYYY) column should be N/A.')
+        if str(vaccinated).lower() == 'yes' and (param == '' and param == 'N/A' and pd.isna(param)):
+            arr_err.append(str(row + 2) + '-1st Dose Vaccination Date (MM/DD/YYYY) column should not be N/A or blank.')
 
-        if fdose == '' and param != '':
-            arr_err.append(str(row + 2) + '-1st Dose Vaccination Date (MM/DD/YYYY) column should be N/A.')
+        # if fdose == 'N/A' and (param != '' and param != 'N/A' and pd.notna(param)):
+        #     arr_err.append(str(row + 2) + '-1st Dose Vaccination Date (MM/DD/YYYY) column should be N/A.')
+        #
+        # if fdose == '' and param != '':
+        #     arr_err.append(str(row + 2) + '-1st Dose Vaccination Date (MM/DD/YYYY) column should be N/A.')
 
         if fdose == '':
             arr_err.append(str(row + 2) + '-1st dose (LGU or LTGC) column should be N/A.')
+        elif str(fdose).lower() == 'ltgc':
+            julyDate = datetime(2021, 7, 1)
+
+            if param < julyDate:
+                arr_err.append(str(row + 2) + '-1st Dose Vaccination Date (MM/DD/YYYY) is invalid Date. If LTGC is '
+                                              'selected, date should not be less than July 01, 2021.')
+
+
 
     elif columnName == '2nd Dose Vaccination Date (MM/DD/YYYY)':
 
@@ -175,8 +186,9 @@ def CheckOtherEmptyField(row, field, columnName):
     typeofEmp = ['Employee', 'Third Party Service Provider']
 
     if columnName == 'Employee Number':
-        if field == '':
-            arr_err.append(str(row + 2) + '-' + columnName + ' column should not be blank.')
+
+        if field == '' or field == 'N/A':
+            arr_err.append(str(row + 2) + '-' + columnName + ' column should not be N/A or blank.')
 
     if columnName == 'Vaccinated':
         if field == '' or field == 'N/A':
@@ -201,8 +213,6 @@ def ValidateOtherEmptyField(df, companyName):
     errMessage = []
     arrOtherField = ['Employee Number', 'Company Name in EZ', 'Type of Employee', 'Vaccinated']
 
-
-
     for columnName in arrOtherField:
         errMessage.extend(df.apply(lambda x: CheckOtherEmptyField(x.name,
                                                                   x[columnName],
@@ -210,8 +220,8 @@ def ValidateOtherEmptyField(df, companyName):
 
     errMessage = list(itertools.chain.from_iterable(errMessage))
 
-    # for i in errMessage:
-    #     print(i)
+    for i in errMessage:
+        print(i)
     return processError(errMessage, companyName, 'otherColumn')
 
 
@@ -284,8 +294,8 @@ def ValidateVaccinatedField(df, companyName):
                                                              columnName), axis=1))
 
     errMessage = list(itertools.chain.from_iterable(errMessage))
-    for i in errMessage:
-        print(i)
+    # for i in errMessage:
+    #     print(i)
     return processError(errMessage, companyName, 'VaccinatedYesNo')
 
 
@@ -371,7 +381,7 @@ def getData(fileName):
     df['2nd Dose Date'] = pd.to_datetime(df['2nd Dose Date'], errors='coerce')
 
     rowIDErrors.extend(validateDateFormat(df, companyName))
-    print(df)
+    # print(df)
 
     df['1st Dose year'] = df['1st Dose Vaccination Date (MM/DD/YYYY)'].dt.strftime("%Y")
     df['2nd Dose year'] = df['2nd Dose Vaccination Date (MM/DD/YYYY)'].dt.strftime("%Y")
