@@ -228,9 +228,8 @@ def ValidateOtherEmptyField(df, companyName):
 def VaccinatedYesNo(row, Vaccinated, param, columnName):
     arr_err = []
 
-    vaccineBrand = ['AstraZeneca', 'Covaxin', 'Janssen by J&J', 'Moderna',
-                    'Pfizer-BioNTech', 'Sinopharm', 'Sinovac', 'Sputnik V',
-                    'N/A']
+    vaccineBrand = ['AstraZeneca', 'Covaxin', 'Janssen by J&J', 'Moderna', 'Clover Biopharmaceuticals',
+                    'Pfizer-BioNTech', 'Sinopharm', 'Sinovac', 'Sputnik V', 'N/A']
 
     if str(Vaccinated).lower() == 'yes':
         if columnName == 'Vaccine Brand':
@@ -357,7 +356,8 @@ def getData(fileName):
 
     # Get Filename Company
     fileName = os.path.splitext(fileName)[0]
-    companyName = fileName.split("_")[1]
+    # companyName = fileName.split("_")[1]
+    companyName = fileName.split("Database_")[1]
 
     rowIDErrors = []
     # rowIDErrors.extend(validateDateFormat(df, companyName))
