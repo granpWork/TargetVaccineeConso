@@ -231,7 +231,11 @@ def VaccinatedYesNo(row, Vaccinated, param, columnName):
     vaccineBrand = ['AstraZeneca', 'Covaxin', 'Janssen by J&J', 'Moderna', 'Clover Biopharmaceuticals',
                     'Pfizer-BioNTech', 'Sinopharm', 'Sinovac', 'Sputnik V', 'N/A']
 
+    vaccineSite = ['LGU', 'LTGC', 'N/A']
+
     if str(Vaccinated).lower() == 'yes':
+        isOtherVaccineSite = str(param).lower() in list(map(lambda x: x.lower(), vaccineSite))
+
         if columnName == 'Vaccine Brand':
             isOtherVaccineBrand = str(param).lower() in list(map(lambda x: x.lower(), vaccineBrand))
 
@@ -244,14 +248,21 @@ def VaccinatedYesNo(row, Vaccinated, param, columnName):
                 arr_err.append(str(row + 2) + '-Vaccine Brand column should not be N/A if Vaccinated column '
                                               'is Yes')
         if columnName == '1st dose \n (LGU or LTGC)':
+
             if param == '':
                 arr_err.append(str(row + 2) + '-1st dose (LGU or LTGC) column should not be Blank, put N/A instead.')
+            elif not isOtherVaccineSite:
+                arr_err.append(str(row + 2) + '-1st dose (LGU or LTGC) column Invalid Vaccine Site. Please set to '
+                                              'LGU, LTGC or N/A.')
             # if param == 'N/A':
             #     arr_err.append(str(row + 2) + '-1st dose (LGU or LTGC) column should not be N/A if '
             #                                   'Vaccinated column is Yes ')
         if columnName == '2nd dose \n (LGU or LTGC)':
             if param == '':
                 arr_err.append(str(row + 2) + '-2nd dose (LGU or LTGC) column should not be Blank, put N/A instead.')
+            elif not isOtherVaccineSite:
+                arr_err.append(str(row + 2) + '-2nd dose (LGU or LTGC) column Invalid Vaccine Site. Please set to '
+                                              'LGU, LTGC or N/A.')
             # if param == 'N/A':
             #     arr_err.append(str(row + 2) + '-2nd dose (LGU or LTGC) column should not be N/A if '
             #                                   'Vaccinated column is Yes ')
@@ -293,8 +304,8 @@ def ValidateVaccinatedField(df, companyName):
                                                              columnName), axis=1))
 
     errMessage = list(itertools.chain.from_iterable(errMessage))
-    # for i in errMessage:
-    #     print(i)
+    for i in errMessage:
+        print(i)
     return processError(errMessage, companyName, 'VaccinatedYesNo')
 
 
